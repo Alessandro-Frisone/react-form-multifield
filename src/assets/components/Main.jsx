@@ -1,14 +1,44 @@
 import { useState } from "react";
 
 export default function Main() {
-  const [article, setArticle] = useState(["Pane", "Vino", "Pasta"]);
+  const [list, setList] = useState([]);
 
-  const [newArticle, setNewArticle] = useState("");
+  const [article, setArticle] = useState({
+    title: "",
+    autore: "",
+    contenuto: "",
+    select: "",
+    available: false,
+  });
 
-  const addArticle = (e) => {
-    e.preventDefault();
-    setArticle([...article, newArticle]);
-    setNewArticle("");
+  /**
+   * Funzione che aggiorna il formData
+   * @param {*} fieldName chiave dell'oggetto formData
+   * @param {*} value nuovo valore da impostare
+   **/
+
+  const handleArticle = (fieldName, value) => {
+    setArticle((currentFormData) => ({
+      ...currentFormData,
+      [fieldName]: value,
+    }));
+  };
+
+  /**
+   * Funzione che aggiunge un nuovo elemento alla lista
+   * @param {*} event l'evento submit
+   **/
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setList((currentList) => [...currentList, article]);
+    setArticle({
+      title: "",
+      autore: "",
+      contenuto: "",
+      select: "",
+      available: false,
+    });
   };
 
   return (
@@ -16,20 +46,64 @@ export default function Main() {
       <div className="container">
         <h1>LISTA</h1>
         <div className="list">
-          <form onSubmit={addArticle}>
-            <ul>
-              {article.map((articles, index) => {
-                return <li key={index}>{articles}</li>;
-              })}
-            </ul>
-            <hr />
+          <ul>
+            {list.map((item) => (
+              <li key={item.title}>
+                {item.title} - {item.autore} - {item.contenuto} - {item.select}{" "}
+                - {item.available ? "disponibile" : "non disponibile"}
+              </li>
+            ))}
+          </ul>
+          <hr />
+          <form onSubmit={handleSubmit}>
             <input
+              className="area-testo"
               type="text"
-              value={newArticle}
-              onChange={(e) => {
-                setNewArticle(e.target.value);
-              }}
+              placeholder="Inserisci il titolo"
+              value={article.title}
+              onChange={(event) => handleArticle("title", event.target.value)}
             />
+            <br />
+            <input
+              className="area-testo"
+              type="text"
+              placeholder="Inserisci l'autore"
+              value={article.autore}
+              onChange={(event) => handleArticle("autore", event.target.value)}
+            />
+            <br />
+            <input
+              className="area-testo"
+              type="text"
+              placeholder="Inserisci il contenuto"
+              value={article.contenuto}
+              onChange={(event) =>
+                handleArticle("contenuto", event.target.value)
+              }
+            />
+            <br />
+            <label for="scelta">Scegli un'opzione:</label>
+            <select
+              className="select-area"
+              value={article.select}
+              onChange={(event) => handleArticle("select", event.target.value)}
+            >
+              <option value="FrontEnd">FrontEnd</option>
+              <option value="BackEnd">BackEnd</option>
+              <option value="UI">UI</option>
+              <option value="UX">UX</option>
+            </select>
+            <br />
+            <label className="checkbox-area">
+              <p>Clicca la spunta se disponibile</p>
+              <input
+                type="checkbox"
+                value={article.available}
+                onChange={(event) =>
+                  handleArticle("available", event.target.checked)
+                }
+              />
+            </label>
             <button className="btn">AGGIUNGI</button>
           </form>
         </div>
