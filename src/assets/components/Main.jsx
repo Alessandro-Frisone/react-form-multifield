@@ -82,12 +82,15 @@ export default function Main() {
               }
             />
             <br />
-            <label for="scelta">Scegli un'opzione:</label>
+            <label htmlFor="scelta">Scegli un'opzione:</label>
             <select
               className="select-area"
               value={article.select}
               onChange={(event) => handleArticle("select", event.target.value)}
             >
+              <option value="" disabled>
+                Selezione un'opzione
+              </option>
               <option value="FrontEnd">FrontEnd</option>
               <option value="BackEnd">BackEnd</option>
               <option value="UI">UI</option>
